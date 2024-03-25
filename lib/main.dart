@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minigame_app/UI/games/reaction_time.dart';
-import 'package:minigame_app/UI/games/visual_memory.dart';
+import 'package:minigame_app/UI/games/VisualMemory.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: VisualMemory(title: 'Visual Memory'),
+      home: VisualMemoryScreen(title: 'Visual Memory'),
     );
   }
 }
