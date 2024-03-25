@@ -30,11 +30,11 @@ class MyApp extends StatelessWidget {
         } else if (settings.name == '/regles') {
           return MaterialPageRoute(builder: (_) => ReglesScreen());
         } else if (settings.name == '/reactiontime') {
-          return MaterialPageRoute(builder: (_) => ReactionTimeScreen());
+          return MaterialPageRoute(builder: (_) => const ReactionTimeScreen());
         } else if (settings.name == '/visualmemory') {
-          return MaterialPageRoute(builder: (_) => VisualMemoryScreen());
+          return MaterialPageRoute(builder: (_) => const VisualMemoryScreen());
         } else if (settings.name == '/aimtrainer') {
-          return MaterialPageRoute(builder: (_) => AimTrainerScreen());
+          return MaterialPageRoute(builder: (_) => const AimTrainerScreen());
         }
         return null;
       },

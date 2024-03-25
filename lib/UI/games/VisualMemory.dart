@@ -71,7 +71,7 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
         });
       });
       Timer(Duration(milliseconds: 1500), () {
-        setState(() {
+        setState(() { 
           grid[row][col] = false;
         });
       });
