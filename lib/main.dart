@@ -6,6 +6,7 @@ import 'package:minigame_app/screen/regles.dart';
 import 'package:minigame_app/screen/Games/ReactionTime.dart';
 import 'package:minigame_app/screen/Games/VisualMemory.dart';
 import 'package:minigame_app/screen/Games/AimTrainer.dart';
+import 'package:minigame_app/screen/Games/TicTacToe.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,8 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (_) => const VisualMemoryScreen());
         } else if (settings.name == '/aimtrainer') {
           return MaterialPageRoute(builder: (_) => const AimTrainerScreen());
+        } else if (settings.name == '/tictactoe'){
+          return MaterialPageRoute(builder: (_) => TicTacToe());
         }
         return null;
       },

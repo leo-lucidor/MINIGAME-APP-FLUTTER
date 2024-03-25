@@ -92,6 +92,25 @@ class AccueilScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 10), // Ajout d'un espace de 10 pixels entre les boutons
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/tictactoe');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 255, 78, 31),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // Bord arrondi
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Padding
+                ),
+                child: Text('TicTacToe',
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
