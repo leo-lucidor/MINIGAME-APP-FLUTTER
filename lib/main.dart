@@ -7,6 +7,7 @@ import 'package:minigame_app/screen/Games/ReactionTime.dart';
 import 'package:minigame_app/screen/Games/VisualMemory.dart';
 import 'package:minigame_app/screen/Games/AimTrainer.dart';
 import 'package:minigame_app/screen/Games/TicTacToe.dart';
+import 'package:minigame_app/screen/Games/GuessTheNumber.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (_) => const AimTrainerScreen());
         } else if (settings.name == '/tictactoe'){
           return MaterialPageRoute(builder: (_) => TicTacToe());
+        } else if (settings.name == '/guessnumber'){
+          return MaterialPageRoute(builder: (_) => GuessTheNumber());
         }
         return null;
       },
