@@ -1,27 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:minigame_app/UI/games/reaction_time.dart';
-import 'package:minigame_app/UI/games/visual_memory.dart';
+import 'package:minigame_app/screen/connexion.dart';
+import 'package:minigame_app/screen/accueil.dart';
+import 'package:minigame_app/screen/leaderboard.dart';
+import 'package:minigame_app/screen/regles.dart';
+import 'package:minigame_app/screen/Games/ReactionTime.dart';
+import 'package:minigame_app/screen/Games/VisualMemory.dart';
+import 'package:minigame_app/screen/Games/AimTrainer.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: VisualMemory(title: 'Visual Memory'),
+      debugShowCheckedModeBanner: false,
+      title: 'MiniGame',
+      onGenerateRoute: (settings) {
+        if (settings.name == '/') {
+          return MaterialPageRoute(builder: (_) => LoginScreen());
+        } else if (settings.name == '/accueil') {
+          return MaterialPageRoute(builder: (_) => AccueilScreen());
+        } else if (settings.name == '/leaderboard') {
+          return MaterialPageRoute(builder: (_) => LeaderboardScreen());
+        } else if (settings.name == '/regles') {
+          return MaterialPageRoute(builder: (_) => ReglesScreen());
+        } else if (settings.name == '/reactiontime') {
+          return MaterialPageRoute(builder: (_) => ReactionTimeScreen());
+        } else if (settings.name == '/visualmemory') {
+          return MaterialPageRoute(builder: (_) => VisualMemoryScreen());
+        } else if (settings.name == '/aimtrainer') {
+          return MaterialPageRoute(builder: (_) => AimTrainerScreen());
+        }
+        return null;
+      },
     );
   }
 }
