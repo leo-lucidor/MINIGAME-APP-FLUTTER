@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class VisualMemory extends StatefulWidget {
+class VisualMemoryScreen extends StatefulWidget {
 
-  const VisualMemory({Key? key, required this.title}) : super(key: key);
+  const VisualMemoryScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -12,7 +12,7 @@ class VisualMemory extends StatefulWidget {
   VisualMemoryState createState() => VisualMemoryState();
 }
 
-class VisualMemoryState extends State<VisualMemory> {
+class VisualMemoryState extends State<VisualMemoryScreen> {
   late List<List<bool>> grid;
   int gridSize = 3;
   List<int> sequence = [];
