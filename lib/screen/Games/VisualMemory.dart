@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class VisualMemoryScreen extends StatefulWidget {
 
-  const VisualMemoryScreen({Key? key}) : super(key: key);
+  const VisualMemoryScreen({super.key});
 
   @override
   VisualMemoryState createState() => VisualMemoryState();

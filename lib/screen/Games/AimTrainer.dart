@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:minigame_app/screen/Navigation/BottomNavigationBarNone.dart';
 
 class AimTrainerScreen extends StatefulWidget {
   const AimTrainerScreen({Key? key}) : super(key: key);
@@ -12,142 +11,117 @@ class AimTrainerScreen extends StatefulWidget {
 }
 
 class _AimTrainerScreenState extends State<AimTrainerScreen> {
-  int _targetClicked = 0;
-  DateTime? _startTime;
-  DateTime? _endTime;
-  List<int> _reactionTimes = [];
-  bool _isGameRunning = false;
-  int _remainingTime = 30;
-  late Timer _timer;
+  late DateTime _startTime;
+  late DateTime _endTime;
+  late Duration _totalDuration;
+  int _targetCount = 0;
+  late Offset _targetPosition;
+  double _totalClickDuration = 0.0;
 
   @override
   void initState() {
     super.initState();
+    _totalDuration = Duration.zero;
+    _targetPosition = const Offset(0, 0); // Initialiser à une position hors de l'écran
     _startGame();
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
+  void _startGame() {
+    _targetCount = 0;
+    _totalClickDuration = 0.0;
+    _nextTarget();
   }
 
-  void _startGame() {
-    _isGameRunning = true;
-    _startTime = DateTime.now();
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        _remainingTime--;
-        if (_remainingTime <= 0) {
-          _isGameRunning = false;
-          _timer.cancel();
-          _showResultDialog();
-        }
-      });
+  Offset _generateRandomPosition() {
+    final random = Random();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final targetSize = 50.0; // Taille de la cible
+    final randomX = random.nextDouble() * (screenWidth - targetSize);
+    final randomY = random.nextDouble() * (screenHeight - targetSize);
+    return Offset(randomX, randomY);
+  }
+
+  void _nextTarget() {
+    setState(() {
+      _targetCount++;
+      _targetPosition = _generateRandomPosition();
+      _startTime = DateTime.now();
     });
   }
 
-  void _showResultDialog() {
-    int totalReactionTime = _reactionTimes.reduce((a, b) => a + b);
-    double averageReactionTime = totalReactionTime / _reactionTimes.length;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Game Over"),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Targets clicked: $_targetClicked"),
-              Text("Average time per target: ${averageReactionTime.toStringAsFixed(2)} ms"),
-              Text("This test is best taken with a mouse or tablet screen. Trackpads are difficult to score well with."),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                setState(() {
-                  _targetClicked = 0;
-                  _startTime = null;
-                  _endTime = null;
-                  _reactionTimes.clear();
-                  _remainingTime = 30;
-                });
-                _startGame();
-              },
-              child: Text("Restart"),
-            ),
-          ],
-        );
-      },
-    );
+  void _onTargetClicked() {
+    _endTime = DateTime.now();
+    final clickDuration = _endTime.difference(_startTime).inMilliseconds / 1000;
+    setState(() {
+      _totalClickDuration += clickDuration;
+      if (_targetCount < 10) {
+        _nextTarget();
+      } else {
+        _endGame();
+      }
+    });
   }
 
-  void _handleTap() {
-    if (_isGameRunning) {
-      setState(() {
-        _targetClicked++;
-      });
-    }
+  void _endGame() {
+    setState(() {
+      _totalDuration = DateTime.now().difference(_startTime);
+    });
+    // Calculate average click duration
+    final averageClickDuration = _totalClickDuration / _targetCount;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Game Over'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Total time: ${_totalDuration.inSeconds} seconds'),
+            Text('Average click duration: ${averageClickDuration.toStringAsFixed(2)} seconds'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _startGame();
+            },
+            child: Text('Play Again'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de la barre d'applications
-        centerTitle: true,
-        automaticallyImplyLeading: false, // Enlève la flèche de retour
-        title: Image.asset(
-          'images/logo.png', // Chemin vers votre image dans le dossier images
-          width: 200, // Largeur souhaitée de l'image
-          height: 200, // Hauteur souhaitée de l'image
+        title: Text('Aim Trainer'),
+      ),
+      body: GestureDetector(
+        onTap: _onTargetClicked,
+        child: Center(
+          child: _targetCount < 10
+              ? Stack(
+                  children: [
+                    Positioned(
+                      left: _targetPosition.dx,
+                      top: _targetPosition.dy,
+                      child: Text(
+                        'Target $_targetCount',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ],
+                )
+              : Text(
+                  'Game Over',
+                  style: TextStyle(fontSize: 24),
+                ),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Remaining Time: $_remainingTime',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: _handleTap,
-              child: Stack(
-                children: List.generate(
-                  30,
-                      (index) {
-                    final random = Random();
-                    final double x = random.nextDouble() * MediaQuery.of(context).size.width;
-                    final double y = random.nextDouble() * MediaQuery.of(context).size.height;
-                    return Visibility(
-                      visible: _isGameRunning,
-                      child: Positioned(
-                        left: x,
-                        top: y,
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _targetClicked++;
-                            });
-                          },
-                          child: Icon(Icons.circle, size: 50, color: Colors.blue),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBarNone(),
     );
   }
 }

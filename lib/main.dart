@@ -6,9 +6,40 @@ import 'package:minigame_app/screen/regles.dart';
 import 'package:minigame_app/screen/Games/ReactionTime.dart';
 import 'package:minigame_app/screen/Games/VisualMemory.dart';
 import 'package:minigame_app/screen/Games/AimTrainer.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:flutter/widgets.dart';
 
 Future<void> main() async {
+
+  /*Commenter cette partie pour lancer l'app sur Edge/Chrome*/
   WidgetsFlutterBinding.ensureInitialized();
+  final database = openDatabase(
+    join(await getDatabasesPath(), 'minigame_database.db'),
+    onCreate: (Database db, int version) async {
+      await db.execute(
+        '''
+        CREATE TABLE users(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username TEXT NOT NULL UNIQUE,
+        );
+        '''
+      );
+
+      await db.execute(
+        '''
+        CREATE TABLE leaderboard(
+          id_game INTEGER PRIMARY KEY NOT NULL,
+          id_user INTEGER PRIMARY KEY NOT NULL,
+          score INTEGER NOT NULL,
+          FOREIGN KEY (id_user) REFERENCES users(id),
+        );
+        '''
+      );
+    },
+    version: 1,
+  );
+  /*Fin de la partie à commenter*/
   runApp(MyApp());
 }
 
