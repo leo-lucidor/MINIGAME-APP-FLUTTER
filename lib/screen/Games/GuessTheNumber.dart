@@ -1,12 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:minigame_app/screen/Appbar/AppBarJeux.dart';
 import 'package:minigame_app/screen/Navigation/BottomNavigationBarNone.dart';
-
-void main() {
-  runApp(GuessTheNumber());
-}
 
 class GuessTheNumber extends StatelessWidget {
   @override
@@ -26,24 +21,25 @@ class GuessPage extends StatefulWidget {
 class _GuessPageState extends State<GuessPage> {
   late int _targetNumber;
   late int _level;
-  late int _lives;
   late TextEditingController _controller;
   late Timer _timer;
   int _seconds = 5;
+  int _guessAttempts = 0;
   bool _showNumber = true;
 
   @override
   void initState() {
     super.initState();
     _level = 1;
-    _lives = 3;
     _targetNumber = _generateNumber();
     _controller = TextEditingController();
     _startTimer();
   }
 
   int _generateNumber() {
-    return Random().nextInt(_level * 10) + 1;
+    // Augmenter le nombre de chiffres en fonction du niveau
+    num maxNumber = pow(10, _level + 1) - 1;
+    return Random().nextInt(maxNumber.toInt()) + 1;
   }
 
   void _startTimer() {
@@ -56,12 +52,8 @@ class _GuessPageState extends State<GuessPage> {
         setState(() {
           _showNumber = false;
           _timer.cancel();
-          _lives--;
-          if (_lives > 0) {
-            _showResult('Out of time! Try again.');
-          } else {
-            _showResult('Out of lives! You lose.');
-          }
+          // Afficher directement le champ de saisie
+          _controller.clear();
         });
       }
     });
@@ -70,34 +62,67 @@ class _GuessPageState extends State<GuessPage> {
   void _checkNumber() {
     int guess = int.tryParse(_controller.text) ?? -1;
     if (guess == _targetNumber) {
-      _showResult('Correct!');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Correct!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      setState(() {
+        _level++;
+        _targetNumber = _generateNumber();
+        _seconds = 5;
+        _showNumber = true;
+        _guessAttempts = 0;
+        _startTimer();
+      });
     } else {
-      _showResult('Incorrect, try again!');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Incorrect, try again!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      _showRetryDialog();
     }
   }
 
-  void _showResult(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-        onVisible: () {
-          setState(() {
-            if (message == 'Correct!') {
-              _level++;
-              _targetNumber = _generateNumber();
-              _seconds = 5;
-              _showNumber = true;
-            } else {
-              _controller.clear();
-            }
-          });
-          if (message != 'Correct!') {
-            _startTimer();
-          }
-        },
-      ),
+  void _showRetryDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Tu as perdu !'),
+          content: Text('Tu veux rejouer ?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _restartGame();
+              },
+              child: Text('Oui'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Do something if the user chooses not to play again
+              },
+              child: Text('Non'),
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  void _restartGame() {
+    setState(() {
+      _level = 1;
+      _targetNumber = _generateNumber();
+      _seconds = 5;
+      _showNumber = true;
+      _startTimer();
+    });
   }
 
   @override
@@ -110,6 +135,7 @@ class _GuessPageState extends State<GuessPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de fond
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de la barre d'applications
         centerTitle: true,
@@ -134,50 +160,35 @@ class _GuessPageState extends State<GuessPage> {
                     'Level $_level: $_targetNumber',
                     style: TextStyle(fontSize: 24),
                   )
-                : Text(
-                    'Time\'s up! Enter your guess:',
-                    style: TextStyle(fontSize: 24),
+                : Column(
+                    children: [
+                      Text(
+                        'Enter your guess:',
+                        style: TextStyle(fontSize: 24),
+                      ),
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: 150,
+                        child: TextField(
+                          controller: _controller,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20),
+                          decoration: InputDecoration(
+                            hintText: 'Entre ton chiffre ici',
+                          ),
+                          onSubmitted: (_) => _checkNumber(),
+                        ),
+                      ),
+                    ],
                   ),
             SizedBox(height: 20),
             _showNumber
                 ? Text(
-                    '$_seconds seconds left',
+                    '$_seconds secondes restantes',
                     style: TextStyle(fontSize: 20),
                   )
                 : SizedBox.shrink(),
-            SizedBox(height: 20),
-            _showNumber
-                ? SizedBox.shrink()
-                : SizedBox(
-                    width: 150,
-                    child: TextField(
-                      controller: _controller,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
-                      decoration: InputDecoration(
-                        hintText: 'Enter guess',
-                      ),
-                      onSubmitted: (_) => _checkNumber(),
-                    ),
-                  ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                3,
-                (index) => Icon(
-                  index < _lives ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            LinearProgressIndicator(
-              value: _lives / 3,
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-            ),
           ],
         ),
       ),

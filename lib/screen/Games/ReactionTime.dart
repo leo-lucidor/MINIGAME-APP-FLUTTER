@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:minigame_app/screen/Navigation/BottomNavigationBarNone.dart';
-import 'package:minigame_app/screen/Appbar/AppBarJeux.dart';
 import 'dart:async';
 import 'dart:math';
 
