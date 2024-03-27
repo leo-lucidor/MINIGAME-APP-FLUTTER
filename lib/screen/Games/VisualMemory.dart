@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:minigame_app/models/PreferencesHelper.dart';
 
 class VisualMemoryScreen extends StatefulWidget {
 
@@ -25,6 +26,11 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
     super.initState();
     startGame();
   }
+
+  // Future<int> fetchUserId() async {
+  //   int id = await PreferencesHelper.getUserId();
+  //   return id;
+  // }
 
   void reset() {
     gridSize = 3;

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:minigame_app/models/Users.dart';
+import 'package:minigame_app/models/PreferencesHelper.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -61,6 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
+                      await Users.addUser(_NomController.text);
+                      PreferencesHelper.setUserId(await Users.getIdByName(_NomController.text));
                       if (_NomController.text.isNotEmpty) {
                         Navigator.pushNamed(context, '/accueil');
                       }
