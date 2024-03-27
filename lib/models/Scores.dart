@@ -92,4 +92,19 @@ class ScoresTable {
     Database db = await DatabaseHelper.getDB();
     return await db.rawQuery('SELECT id_user, score FROM scores WHERE id_game = 1 ORDER BY score ASC');
   }
+
+  static Future<List<Map<String, dynamic>>> getClassementVisualMemory() async {
+    Database db = await DatabaseHelper.getDB();
+    return await db.rawQuery('SELECT id_user, score FROM scores WHERE id_game = 2 ORDER BY score DESC');
+  }
+
+  static Future<List<Map<String, dynamic>>> getClassementAimTrainer() async {
+    Database db = await DatabaseHelper.getDB();
+    return await db.rawQuery('SELECT id_user, score FROM scores WHERE id_game = 3 ORDER BY score DESC');
+  }
+
+  static Future<List<Map<String, dynamic>>> getClassementGuessTheNumber() async {
+    Database db = await DatabaseHelper.getDB();
+    return await db.rawQuery('SELECT id_user, score FROM scores WHERE id_game = 4 ORDER BY score DESC');
+  }
 }

@@ -11,19 +11,39 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  List<Map<String, dynamic>> leaderboardData = [];
+  List<Map<String, dynamic>> leaderboardDataReactionTime = [];
+  List<Map<String, dynamic>> leaderboardDataVisualMemory = [];
+  List<Map<String, dynamic>> leaderboardDataGuessTheNumber = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchLeaderboardData();
+    _fetchLeaderboardDataReactionTime();
+    _fetchLeaderboardDataVisualMemory();
+    // _fetchLeaderboardDataGuessTheNumber();
   }
 
-  Future<void> _fetchLeaderboardData() async {
+  Future<void> _fetchLeaderboardDataReactionTime() async {
     List<Map<String, dynamic>> fetchedData = await ScoresTable.getClassementReactionTime();
 
     setState(() {
-      leaderboardData = fetchedData;
+      leaderboardDataReactionTime = fetchedData;
+    });
+  }
+
+  Future<void> _fetchLeaderboardDataVisualMemory() async {
+    List<Map<String, dynamic>> fetchedData = await ScoresTable.getClassementVisualMemory();
+
+    setState(() {
+      leaderboardDataVisualMemory = fetchedData;
+    });
+  }
+
+  Future<void> _fetchLeaderboardDataGuessTheNumber() async {
+    List<Map<String, dynamic>> fetchedData = await ScoresTable.getClassementGuessTheNumber();
+
+    setState(() {
+      leaderboardDataGuessTheNumber = fetchedData;
     });
   }
 
@@ -52,7 +72,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 title: Text('Reaction Time'),
                 children: <Widget>[
                   FutureBuilder<List<DataRow>>(
-                    future: _buildLeaderboardRows(),
+                    future: _buildLeaderboardRowsRT(),
                     builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -72,6 +92,54 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   ),
                 ],
               ),
+              ExpansionTile(
+                title: Text('Visual Memory'),
+                children: <Widget>[
+                  FutureBuilder<List<DataRow>>(
+                    future: _buildLeaderboardRowsVM(),
+                    builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Rang')),
+                            DataColumn(label: Text('Joueur')),
+                            DataColumn(label: Text('Level')),
+                          ],
+                          rows: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+              ExpansionTile(
+                title: Text('Guess The Number'),
+                children: <Widget>[
+                  FutureBuilder<List<DataRow>>(
+                    future: _buildLeaderboardRowsGTN(),
+                    builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Rang')),
+                            DataColumn(label: Text('Joueur')),
+                            DataColumn(label: Text('Level')),
+                          ],
+                          rows: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -80,10 +148,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     );
   }
 
-  Future<List<DataRow>> _buildLeaderboardRows() async {
+  Future<List<DataRow>> _buildLeaderboardRowsRT() async {
     List<DataRow> rows = [];
-    for (int i = 0; i < leaderboardData.length; i++) {
-      final entry = leaderboardData[i];
+    for (int i = 0; i < leaderboardDataReactionTime.length; i++) {
+      final entry = leaderboardDataReactionTime[i];
       final rank = i + 1;
       final playerNameFuture = UsersTable.getNameById(entry['id_user']);
       final playerName = await playerNameFuture;
@@ -93,6 +161,42 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         DataCell(Text(rank.toString())),
         DataCell(Text(playerName)),
         DataCell(Text(reactionTime)),
+      ]));
+    }
+    return rows;
+  }
+
+  Future<List<DataRow>> _buildLeaderboardRowsVM() async {
+    List<DataRow> rows = [];
+    for (int i = 0; i < leaderboardDataVisualMemory.length; i++) {
+      final entry = leaderboardDataVisualMemory[i];
+      final rank = i + 1;
+      final playerNameFuture = UsersTable.getNameById(entry['id_user']);
+      final playerName = await playerNameFuture;
+      final level = entry['score'].toInt().toString();
+
+      rows.add(DataRow(cells: [
+        DataCell(Text(rank.toString())),
+        DataCell(Text(playerName)),
+        DataCell(Text(level)),
+      ]));
+    }
+    return rows;
+  }
+
+  Future<List<DataRow>> _buildLeaderboardRowsGTN() async {
+    List<DataRow> rows = [];
+    for (int i = 0; i < leaderboardDataGuessTheNumber.length; i++) {
+      final entry = leaderboardDataGuessTheNumber[i];
+      final rank = i + 1;
+      final playerNameFuture = UsersTable.getNameById(entry['id_user']);
+      final playerName = await playerNameFuture;
+      final level = entry['score'].toString();
+
+      rows.add(DataRow(cells: [
+        DataCell(Text(rank.toString())),
+        DataCell(Text(playerName)),
+        DataCell(Text(level)),
       ]));
     }
     return rows;
