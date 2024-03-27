@@ -22,6 +22,11 @@ class ScoresTable {
     return await db.insert('scores', {'id_user': idUser, 'id_game': 3, 'score': score});
   }
 
+  static Future<int> addScoreGuessTheNumber(int idUser, double score) async {
+    Database db = await DatabaseHelper.getDB();
+    return await db.insert('scores', {'id_user': idUser, 'id_game': 4, 'score': score});
+  }
+
   static Future<List<Map<String, dynamic>>> getScores() async {
     Database db = await DatabaseHelper.getDB();
     return await db.query('scores');
@@ -54,6 +59,15 @@ class ScoresTable {
     return bestScore[0]['score'];
   }
 
+  static Future<double> getBestScoreGuessTheNumber(int idUser) async {
+    Database db = await DatabaseHelper.getDB();
+    List<Map<String, dynamic>> bestScore = await db.query('scores', where: 'id_user = ? AND id_game = ?', whereArgs: [idUser, 4], orderBy: 'score DESC', limit: 1);
+    if (bestScore.isEmpty) {
+      return 0;
+    }
+    return bestScore[0]['score'];
+  }
+
   static Future<List<Map<String, dynamic>>> getScoresReactionTime(int idUser) async {
     Database db = await DatabaseHelper.getDB();
     return await db.query('scores', where: 'id_user = ? AND id_game = ?', whereArgs: [idUser, 1]);
@@ -67,5 +81,10 @@ class ScoresTable {
   static Future<List<Map<String, dynamic>>> getScoresAimTrainer(int idUser) async {
     Database db = await DatabaseHelper.getDB();
     return await db.query('scores', where: 'id_user = ? AND id_game = ?', whereArgs: [idUser, 3]);
+  }
+
+  static Future<List<Map<String, dynamic>>> getScoresGuessTheNumber(int idUser) async {
+    Database db = await DatabaseHelper.getDB();
+    return await db.query('scores', where: 'id_user = ? AND id_game = ?', whereArgs: [idUser, 4]);
   }
 }
