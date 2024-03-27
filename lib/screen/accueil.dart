@@ -76,7 +76,7 @@ class AccueilScreen extends StatelessWidget {
               SizedBox(height: 10), // Ajout d'un espace de 10 pixels entre les boutons
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/aimtrainer');
+                  Navigator.pushNamed(context, '/guessthenumber');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 255, 78, 31),
@@ -85,13 +85,14 @@ class AccueilScreen extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Padding
                 ),
-                child: Text('Aim Trainer',
+                child: Text('Guess The Number',
                   style: TextStyle(
                     fontSize: 17,
                     color: Colors.white,
                   ),
                 ),
               ),
+              SizedBox(height: 10), // Ajout d'un espace de 10 pixels entre les boutons
             ],
           ),
         ),

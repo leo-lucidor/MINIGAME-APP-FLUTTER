@@ -5,7 +5,7 @@ import 'package:minigame_app/screen/leaderboard.dart';
 import 'package:minigame_app/screen/regles.dart';
 import 'package:minigame_app/screen/Games/ReactionTime.dart';
 import 'package:minigame_app/screen/Games/VisualMemory.dart';
-import 'package:minigame_app/screen/Games/AimTrainer.dart';
+import 'package:minigame_app/screen/Games/GuessTheNumber.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:flutter/widgets.dart';
@@ -64,8 +64,8 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (_) => const ReactionTimeScreen());
         } else if (settings.name == '/visualmemory') {
           return MaterialPageRoute(builder: (_) => const VisualMemoryScreen());
-        } else if (settings.name == '/aimtrainer') {
-          return MaterialPageRoute(builder: (_) => const AimTrainerScreen());
+        } else if (settings.name == '/guessthenumber') {
+          return MaterialPageRoute(builder: (_) => GuessTheNumber());
         }
         return null;
       },

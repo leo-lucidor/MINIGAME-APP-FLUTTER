@@ -2,23 +2,16 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:minigame_app/screen/Navigation/BottomNavigationBarNone.dart';
+import 'package:minigame_app/models/PreferencesHelper.dart';
+import 'package:minigame_app/models/Scores.dart';
 
-class GuessTheNumber extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Guess The Number',
-      home: GuessPage(),
-    );
-  }
-}
 
-class GuessPage extends StatefulWidget {
+class GuessTheNumber extends StatefulWidget {
   @override
   _GuessPageState createState() => _GuessPageState();
 }
 
-class _GuessPageState extends State<GuessPage> {
+class _GuessPageState extends State<GuessTheNumber> {
   late int _targetNumber;
   late int _level;
   late TextEditingController _controller;
@@ -43,7 +36,7 @@ class _GuessPageState extends State<GuessPage> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_seconds > 0) {
         setState(() {
           _seconds--;
@@ -63,7 +56,7 @@ class _GuessPageState extends State<GuessPage> {
     int guess = int.tryParse(_controller.text) ?? -1;
     if (guess == _targetNumber) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Correct!'),
           duration: Duration(seconds: 2),
         ),
@@ -78,7 +71,7 @@ class _GuessPageState extends State<GuessPage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Incorrect, try again!'),
           duration: Duration(seconds: 2),
         ),
@@ -87,27 +80,35 @@ class _GuessPageState extends State<GuessPage> {
     }
   }
 
-  void _showRetryDialog() {
+  void _showRetryDialog() async {
+    int idUser = await PreferencesHelper.getUserId();
+    ScoresTable.addScoreGuessTheNumber(idUser, _level.toDouble());
+    ScoresTable.getScoresGuessTheNumber(idUser).then((value) {
+      print(value);
+    });
+    ScoresTable.getBestScoreGuessTheNumber(idUser).then((value) {
+      print(value);
+    });
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Tu as perdu !'),
-          content: Text('Tu veux rejouer ?'),
+          title: const Text('Tu as perdu !'),
+          content: const Text('Tu veux rejouer ?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _restartGame();
               },
-              child: Text('Oui'),
+              child: const Text('Oui'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // Do something if the user chooses not to play again
+                Navigator.pushNamed(context, '/accueil'); // Action pour revenir à la page précédente
               },
-              child: Text('Non'),
+              child: const Text('Non'),
             ),
           ],
         );
@@ -135,9 +136,9 @@ class _GuessPageState extends State<GuessPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de fond
+      backgroundColor: const Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de fond
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de la barre d'applications
+        backgroundColor: const Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de la barre d'applications
         centerTitle: true,
         title: Image.asset(
           'images/logo.png', // Chemin vers votre image dans le dossier images
@@ -145,8 +146,9 @@ class _GuessPageState extends State<GuessPage> {
           height: 200, // Hauteur souhaitée de l'image
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // icône de flèche de retour
+          icon: const Icon(Icons.arrow_back), // icône de flèche de retour
           onPressed: () {
+            dispose();
             Navigator.pushNamed(context, '/accueil'); // Action pour revenir à la page précédente
           },
         ),
@@ -158,23 +160,23 @@ class _GuessPageState extends State<GuessPage> {
             _showNumber
                 ? Text(
                     'Level $_level: $_targetNumber',
-                    style: TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 24),
                   )
                 : Column(
                     children: [
-                      Text(
+                      const Text(
                         'Enter your guess:',
                         style: TextStyle(fontSize: 24),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       SizedBox(
                         width: 150,
                         child: TextField(
                           controller: _controller,
                           keyboardType: TextInputType.number,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20),
-                          decoration: InputDecoration(
+                          style: const TextStyle(fontSize: 20),
+                          decoration: const InputDecoration(
                             hintText: 'Entre ton chiffre ici',
                           ),
                           onSubmitted: (_) => _checkNumber(),
@@ -182,13 +184,13 @@ class _GuessPageState extends State<GuessPage> {
                       ),
                     ],
                   ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _showNumber
                 ? Text(
                     '$_seconds secondes restantes',
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
         ),
       ),

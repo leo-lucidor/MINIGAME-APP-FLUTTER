@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:minigame_app/models/PreferencesHelper.dart';
 import 'package:minigame_app/models/Scores.dart';
+import '../Navigation/BottomNavigationBarNone.dart';
 
 class VisualMemoryScreen extends StatefulWidget {
 
@@ -165,8 +166,22 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 244, 253, 242),
       appBar: AppBar(
-        title: Text("Visual Memory Game"),
+        backgroundColor: const Color.fromARGB(255, 244, 253, 242),
+        centerTitle: true,
+        title: Image.asset(
+          'images/logo.png', // Chemin vers votre image dans le dossier images
+          width: 200, // Largeur souhaitée de l'image
+          height: 200, // Hauteur souhaitée de l'image
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back), // icône de flèche de retour
+          onPressed: () {
+            dispose();
+            Navigator.pushNamed(context, '/accueil'); // Action pour revenir à la page précédente
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -213,6 +228,7 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBarNone(),
     );
   }
 }

@@ -20,7 +20,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     super.initState();
     _fetchLeaderboardDataReactionTime();
     _fetchLeaderboardDataVisualMemory();
-    // _fetchLeaderboardDataGuessTheNumber();
+    _fetchLeaderboardDataGuessTheNumber();
   }
 
   Future<void> _fetchLeaderboardDataReactionTime() async {
@@ -193,7 +193,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       final rank = i + 1;
       final playerNameFuture = UsersTable.getNameById(entry['id_user']);
       final playerName = await playerNameFuture;
-      final level = entry['score'].toString();
+      final level = entry['score'].toInt().toString();
 
       rows.add(DataRow(cells: [
         DataCell(Text(rank.toString())),
