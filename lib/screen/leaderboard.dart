@@ -1,21 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:minigame_app/screen/Navigation/BottomNavigationBarLeaderboard.dart';
+import 'package:minigame_app/models/Scores.dart';
+import 'package:minigame_app/models/Users.dart';
 
-class LeaderboardScreen extends StatelessWidget {
-  LeaderboardScreen();
+class LeaderboardScreen extends StatefulWidget {
+  LeaderboardScreen({Key? key}) : super(key: key);
+
+  @override
+  _LeaderboardScreenState createState() => _LeaderboardScreenState();
+}
+
+class _LeaderboardScreenState extends State<LeaderboardScreen> {
+  List<Map<String, dynamic>> leaderboardData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLeaderboardData();
+  }
+
+  Future<void> _fetchLeaderboardData() async {
+    List<Map<String, dynamic>> fetchedData = await ScoresTable.getClassementReactionTime();
+
+    setState(() {
+      leaderboardData = fetchedData;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(  
-      backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur d'arrière-plan de la page
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 244, 253, 242),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de la barre d'applications
+        backgroundColor: Color.fromARGB(255, 244, 253, 242),
         centerTitle: true,
-        automaticallyImplyLeading: false, // Enlève la flèche de retour
+        automaticallyImplyLeading: false,
         title: Image.asset(
-          'images/logo.png', // Chemin vers votre image dans le dossier images
-          width: 200, // Largeur souhaitée de l'image
-          height: 200, // Hauteur souhaitée de l'image
+          'images/logo.png',
+          width: 200,
+          height: 200,
         ),
       ),
       body: Center(
@@ -25,25 +48,28 @@ class LeaderboardScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Votre contenu de leaderboard ici
-              DataTable(
-                columns: [
-                  DataColumn(label: Text('Rank')),
-                  DataColumn(label: Text('Player')),
-                  DataColumn(label: Text('Score')),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    DataCell(Text('1')),
-                    DataCell(Text('John')),
-                    DataCell(Text('500')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('2')),
-                    DataCell(Text('Doe')),
-                    DataCell(Text('400')),
-                  ]),
-                  // Ajoutez d'autres lignes de données pour chaque joueur
+              ExpansionTile(
+                title: Text('Reaction Time'),
+                children: <Widget>[
+                  FutureBuilder<List<DataRow>>(
+                    future: _buildLeaderboardRows(),
+                    builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Rang')),
+                            DataColumn(label: Text('Joueur')),
+                            DataColumn(label: Text('Temps de réaction (ms)')),
+                          ],
+                          rows: snapshot.data!,
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ],
@@ -52,5 +78,23 @@ class LeaderboardScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBarLeaderboard(),
     );
+  }
+
+  Future<List<DataRow>> _buildLeaderboardRows() async {
+    List<DataRow> rows = [];
+    for (int i = 0; i < leaderboardData.length; i++) {
+      final entry = leaderboardData[i];
+      final rank = i + 1;
+      final playerNameFuture = UsersTable.getNameById(entry['id_user']);
+      final playerName = await playerNameFuture;
+      final reactionTime = entry['score'].toString();
+
+      rows.add(DataRow(cells: [
+        DataCell(Text(rank.toString())),
+        DataCell(Text(playerName)),
+        DataCell(Text(reactionTime)),
+      ]));
+    }
+    return rows;
   }
 }

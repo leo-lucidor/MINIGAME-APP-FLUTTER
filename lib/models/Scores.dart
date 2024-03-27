@@ -87,4 +87,9 @@ class ScoresTable {
     Database db = await DatabaseHelper.getDB();
     return await db.query('scores', where: 'id_user = ? AND id_game = ?', whereArgs: [idUser, 4]);
   }
+
+  static Future<List<Map<String, dynamic>>> getClassementReactionTime() async {
+    Database db = await DatabaseHelper.getDB();
+    return await db.rawQuery('SELECT id_user, score FROM scores WHERE id_game = 1 ORDER BY score ASC');
+  }
 }

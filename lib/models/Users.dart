@@ -28,4 +28,19 @@ class UsersTable {
     List<Map<String, dynamic>> user = await db.query('users', where: 'username = ?', whereArgs: [name]);
     return user[0]['id'];
   }
+
+  static Future<String> getNameById(int id) async {
+    Database db = await DatabaseHelper.getDB();
+    List<Map<String, dynamic>> user = await db.query('users', where: 'id = ?', whereArgs: [id]);
+    return user[0]['username'];
+  }
+
+  static String getName(int id) {
+    String name = '';
+    getNameById(id).then((value) {
+      print(value);
+      name = value;
+    });
+    return name;
+  }
 }
