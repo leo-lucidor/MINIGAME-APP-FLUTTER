@@ -21,11 +21,18 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
   int numTilesToMatch = 3;
   bool gameOver = false;
   int livesRemaining = 1;
+  late Timer _timer; // Déclarer le Timer ici
 
   @override
   void initState() {
     super.initState();
     startGame();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Annuler le Timer dans la méthode dispose
+    super.dispose();
   }
 
   void reset() {
@@ -43,7 +50,7 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
       gameOver = false;
     });
 
-    Timer(Duration(seconds: 1), () {
+    _timer = Timer(Duration(seconds: 1), () { // Stocker le Timer dans la variable _timer
       generateSequence();
     });
   }
@@ -128,29 +135,32 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
             ScoresTable.getBestScoreVisualMemory(idUser).then((value) {
               print(value);
             });
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Game over !"),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        reset();
-                        startGame();
-                      },
-                      child: Text("Restart"),
-                    ),
-                  ],
-                );
-              },
-            );
+            if (mounted) { // Vérifie si le widget est toujours monté
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Game over !"),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          reset();
+                          startGame();
+                        },
+                        child: Text("Restart"),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
           }
         }
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
