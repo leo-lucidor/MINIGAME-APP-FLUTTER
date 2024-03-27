@@ -25,27 +25,131 @@ class LeaderboardScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Votre contenu de leaderboard ici
-              DataTable(
-                columns: [
-                  DataColumn(label: Text('Rank')),
-                  DataColumn(label: Text('Player')),
-                  DataColumn(label: Text('Score')),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    DataCell(Text('1')),
-                    DataCell(Text('John')),
-                    DataCell(Text('500')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('2')),
-                    DataCell(Text('Doe')),
-                    DataCell(Text('400')),
-                  ]),
-                  // Ajoutez d'autres lignes de données pour chaque joueur
+              ExpansionTile(
+                title: Text('Reaction Time'), // Titre du jeu
+                children: <Widget>[
+                  DataTable(
+                    columns: [
+                      DataColumn(label: Text('Rang')),
+                      DataColumn(label: Text('Joueur')),
+                      DataColumn(label: Text('Temps de réaction (ms)')),
+                    ],
+                    rows: [
+                      const DataRow(cells: [
+                        DataCell(Text('1')),
+                        DataCell(Text('John')),
+                        DataCell(Text('250')),
+                      ]),
+                      const DataRow(cells: [
+                        DataCell(Text('2')),
+                        DataCell(Text('Doe')),
+                        DataCell(Text('300')),
+                      ]),
+                    ],
+                  ),
+                  // Ajouter d'autres règles pour le jeu 1 ici
                 ],
               ),
+              ExpansionTile(
+                title: Text('Visual Memory'), // Titre du jeu
+                children: <Widget>[
+                  DataTable(
+                    columns: [
+                      DataColumn(label: Text('Rang')),
+                      DataColumn(label: Text('Joueur')),
+                      DataColumn(label: Text('Niveau atteint')),
+                    ],
+                    rows: [
+                      const DataRow(cells: [
+                        DataCell(Text('1')),
+                        DataCell(Text('John')),
+                        DataCell(Text('12')),
+                      ]),
+                      const DataRow(cells: [
+                        DataCell(Text('2')),
+                        DataCell(Text('Doe')),
+                        DataCell(Text('8')),
+                      ]),
+                    ],
+                  ),
+                  // Ajouter d'autres règles pour le jeu 1 ici
+                ],
+              ),
+              ExpansionTile(
+                title: Text('Aim Trainer'), // Titre du jeu
+                children: <Widget>[
+                  DataTable(
+                    columns: [
+                      DataColumn(label: Text('rang')),
+                      DataColumn(label: Text('Joueur')),
+                      DataColumn(label: Text('Cibles touchées')),
+                    ],
+                    rows: [
+                      const DataRow(cells: [
+                        DataCell(Text('1')),
+                        DataCell(Text('John')),
+                        DataCell(Text('30')),
+                      ]),
+                      const DataRow(cells: [
+                        DataCell(Text('2')),
+                        DataCell(Text('Doe')),
+                        DataCell(Text('25')),
+                      ]),
+                    ],
+                  ),
+                  // Ajouter d'autres règles pour le jeu 1 ici
+                ],
+              ), 
+              ExpansionTile(
+                title: Text('TicTacToe'), // Titre du jeu
+                children: <Widget>[
+                  DataTable(
+                    columns: [
+                      DataColumn(label: Text('Rang')),
+                      DataColumn(label: Text('Joueur')),
+                      DataColumn(label: Text('Nombre victoires')),
+                    ],
+                    rows: [
+                      const DataRow(cells: [
+                        DataCell(Text('1')),
+                        DataCell(Text('John')),
+                        DataCell(Text('15')),
+                      ]),
+                      const DataRow(cells: [
+                        DataCell(Text('2')),
+                        DataCell(Text('Doe')),
+                        DataCell(Text('5')),
+                      ]),
+                    ],
+                  ),
+                  // Ajouter d'autres règles pour le jeu 1 ici
+                ],
+              ), 
+              ExpansionTile(
+                title: Text('Guess the number'), // Titre du jeu
+                children: <Widget>[
+                  DataTable(
+                    columns: [
+                      DataColumn(label: Text('Rang')),
+                      DataColumn(label: Text('Joueur')),
+                      DataColumn(label: Text('Niveau atteint')),
+                    ],
+                    rows: [
+                      const DataRow(cells: [
+                        DataCell(Text('1')),
+                        DataCell(Text('John')),
+                        DataCell(Text('9')),
+                      ]),
+                      const DataRow(cells: [
+                        DataCell(Text('2')),
+                        DataCell(Text('Doe')),
+                        DataCell(Text('5')),
+                      ]),
+                    ],
+                  ),
+                  // Ajouter d'autres règles pour le jeu 1 ici
+                ],
+              ), 
             ],
           ),
         ),

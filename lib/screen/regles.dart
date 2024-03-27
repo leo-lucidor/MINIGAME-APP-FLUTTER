@@ -51,6 +51,24 @@ class ReglesScreen extends StatelessWidget {
                   // Ajouter d'autres règles pour le jeu 2 ici
                 ],
               ),
+              ExpansionTile(
+                title: Text('TicTacToe'), // Titre du jeu
+                children: <Widget>[
+                  ListTile(
+                    title: Text('TicTacToe est un jeu de stratégie simple où deux joueurs alternent pour placer soit un \'X\' ou un \'O\' sur un plateau de 3x3 cases, le but étant d\'aligner trois de ses symboles horizontalement, verticalement ou en diagonale avant l\'adversaire.'),
+                  ),
+                  // Ajouter d'autres règles pour le jeu 2 ici
+                ],
+              ),
+              ExpansionTile(
+                title: Text('Guess The Number'), // Titre du jeu
+                children: <Widget>[
+                  ListTile(
+                    title: Text('Retient le nombre généré aléatoirement par l\'ordinateur et devine-le en un minimum de tentatives.'),
+                  ),
+                  // Ajouter d'autres règles pour le jeu 2 ici
+                ],
+              ),
               // Ajouter d'autres ExpansionTile pour chaque jeu
             ],
           ),

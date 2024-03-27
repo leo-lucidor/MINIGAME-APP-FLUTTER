@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:minigame_app/screen/Appbar/AppBarJeux.dart';
 import 'package:minigame_app/screen/Navigation/BottomNavigationBarNone.dart';
 
 class AimTrainerScreen extends StatefulWidget {
@@ -99,11 +100,16 @@ class _AimTrainerScreenState extends State<AimTrainerScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 244, 253, 242), // Nouvelle couleur de la barre d'applications
         centerTitle: true,
-        automaticallyImplyLeading: false, // Enlève la flèche de retour
         title: Image.asset(
           'images/logo.png', // Chemin vers votre image dans le dossier images
           width: 200, // Largeur souhaitée de l'image
           height: 200, // Hauteur souhaitée de l'image
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // icône de flèche de retour
+          onPressed: () {
+            Navigator.pushNamed(context, '/accueil'); // Action pour revenir à la page précédente
+          },
         ),
       ),
       body: Column(
