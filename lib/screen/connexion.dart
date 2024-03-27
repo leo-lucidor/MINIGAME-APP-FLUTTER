@@ -64,8 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      await Users.addUser(_NomController.text);
-                      PreferencesHelper.setUserId(await Users.getIdByName(_NomController.text));
+                      await UsersTable.addUser(_NomController.text);
+                      PreferencesHelper.setUserId(await UsersTable.getIdByName(_NomController.text));
                       if (_NomController.text.isNotEmpty) {
                         Navigator.pushNamed(context, '/accueil');
                       }

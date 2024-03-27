@@ -15,7 +15,7 @@ Future<void> main() async {
   /*Commenter cette partie pour lancer l'app sur Edge/Chrome*/
   WidgetsFlutterBinding.ensureInitialized();
   final database = openDatabase(
-    join(await getDatabasesPath(), 'minigameDatabase.db'),
+    join(await getDatabasesPath(), 'minigameDatabase3.db'),
     onCreate: (Database db, int version) async {
       print("create");
       await db.execute(
@@ -29,29 +29,11 @@ Future<void> main() async {
 
       await db.execute(
         '''
-        CREATE TABLE reactiontime(
+        CREATE TABLE scores(
           id_user INTEGER NOT NULL,
-          score FLOAT NOT NULL,
-          FOREIGN KEY (id_user) REFERENCES users(id)
-        );
-        '''
-      );
-      await db.execute(
-          '''
-        CREATE TABLE visualmemory(
-          id_user INTEGER NOT NULL,
-          score FLOAT NOT NULL,
-          FOREIGN KEY (id_user) REFERENCES users(id)
-        );
-        '''
-      );
-      await db.execute(
-          '''
-        CREATE TABLE aimtrainer(
-          id_user INTEGER NOT NULL,
-          score FLOAT NOT NULL,
-          FOREIGN KEY (id_user) REFERENCES users(id)
-        );
+          id_game INTEGER NOT NULL,
+          score FLOAT NOT NULL
+        )
         '''
       );
     },

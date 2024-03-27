@@ -5,7 +5,7 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:sqflite/sqflite.dart';
 import './DatabaseHelper.dart';
 
-class Users {
+class UsersTable {
   static Future<int> addUser(String user) async {
     Database db = await DatabaseHelper.getDB();
     List<Map<String, dynamic>> userExist = await db.query('users', where: 'username = ?', whereArgs: [user]);

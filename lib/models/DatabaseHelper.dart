@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   static const _version = 1;
-  static const _dbName = "minigameDatabase.db";
+  static const _dbName = "minigameDatabase3.db";
 
   
   static Future<Database> getDB() async {

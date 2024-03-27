@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:minigame_app/screen/Navigation/BottomNavigationBarNone.dart';
 import 'dart:async';
 import 'dart:math';
+import 'package:minigame_app/models/PreferencesHelper.dart';
+import 'package:minigame_app/models/Scores.dart';
 
 class ReactionTimeScreen extends StatefulWidget {
 
@@ -41,13 +43,21 @@ class ReactionTimeState extends State<ReactionTimeScreen> {
     });
   }
 
-  void _handleTap() {
+  void _handleTap() async {
     if (_currentColor == Colors.green) {
       setState(() {
         _endTime = DateTime.now();
         debugPrint(_endTime.toString());
       });
       final int reactionTime = _endTime.millisecondsSinceEpoch - _startTime.millisecondsSinceEpoch;
+      int idUser = await PreferencesHelper.getUserId();
+      ScoresTable.addScoreReactionTime(idUser, reactionTime.toDouble());
+      ScoresTable.getScoresReactionTime(idUser).then((value) {
+        print(value);
+      });
+      ScoresTable.getBestScoreReactionTime(idUser).then((value) {
+        print(value);
+      });
       showDialog(
         context: context,
         builder: (BuildContext context) {

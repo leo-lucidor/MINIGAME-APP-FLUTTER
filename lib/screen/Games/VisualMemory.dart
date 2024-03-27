@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:minigame_app/models/PreferencesHelper.dart';
+import 'package:minigame_app/models/Scores.dart';
 
 class VisualMemoryScreen extends StatefulWidget {
 
@@ -19,7 +20,7 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
   int currentLevel = 1;
   int numTilesToMatch = 3;
   bool gameOver = false;
-  int livesRemaining = 3;
+  int livesRemaining = 1;
 
   @override
   void initState() {
@@ -27,16 +28,11 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
     startGame();
   }
 
-  // Future<int> fetchUserId() async {
-  //   int id = await PreferencesHelper.getUserId();
-  //   return id;
-  // }
-
   void reset() {
     gridSize = 3;
     currentLevel = 1;
     numTilesToMatch = 3;
-    livesRemaining = 3;
+    livesRemaining = 1;
   }
 
   void startGame() {
@@ -50,6 +46,14 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
     Timer(Duration(seconds: 1), () {
       generateSequence();
     });
+  }
+
+  Future<double> getBestScore() async {
+    int idUser = await PreferencesHelper.getUserId();
+    ScoresTable.getBestScoreVisualMemory(idUser).then((value) {
+      return value;
+    });
+    return 0;
   }
 
   void generateSequence() {
@@ -82,7 +86,7 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
     }
   }
 
-  void checkPlayerSequence(int index) {
+  void checkPlayerSequence(int index) async {
     if (!gameOver) {
       int row = index ~/ gridSize;
       int col = index % gridSize;
@@ -115,6 +119,14 @@ class VisualMemoryState extends State<VisualMemoryScreen> {
           if (playerSequence.length == numTilesToMatch) {
             setState(() {
               gameOver = true;
+            });
+            int idUser = await PreferencesHelper.getUserId();
+            ScoresTable.addScoreVisualMemory(idUser, currentLevel.toDouble());
+            ScoresTable.getScoresVisualMemory(idUser).then((value) {
+              print(value);
+            });
+            ScoresTable.getBestScoreVisualMemory(idUser).then((value) {
+              print(value);
             });
             showDialog(
               context: context,
