@@ -50,9 +50,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 244, 253, 242),
+      backgroundColor: const Color.fromARGB(255, 244, 253, 242),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 244, 253, 242),
+        backgroundColor: const Color.fromARGB(255, 244, 253, 242),
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Image.asset(
@@ -62,85 +62,87 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         ),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ExpansionTile(
-                title: Text('Reaction Time'),
-                children: <Widget>[
-                  FutureBuilder<List<DataRow>>(
-                    future: _buildLeaderboardRowsRT(),
-                    builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Rang')),
-                            DataColumn(label: Text('Joueur')),
-                            DataColumn(label: Text('Temps de réaction (ms)')),
-                          ],
-                          rows: snapshot.data!,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-              ExpansionTile(
-                title: Text('Visual Memory'),
-                children: <Widget>[
-                  FutureBuilder<List<DataRow>>(
-                    future: _buildLeaderboardRowsVM(),
-                    builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Rang')),
-                            DataColumn(label: Text('Joueur')),
-                            DataColumn(label: Text('Level')),
-                          ],
-                          rows: snapshot.data!,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-              ExpansionTile(
-                title: Text('Guess The Number'),
-                children: <Widget>[
-                  FutureBuilder<List<DataRow>>(
-                    future: _buildLeaderboardRowsGTN(),
-                    builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Rang')),
-                            DataColumn(label: Text('Joueur')),
-                            DataColumn(label: Text('Level')),
-                          ],
-                          rows: snapshot.data!,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ExpansionTile(
+                  title: const Text('Reaction Time'),
+                  children: <Widget>[
+                    FutureBuilder<List<DataRow>>(
+                      future: _buildLeaderboardRowsRT(),
+                      builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Rang')),
+                              DataColumn(label: Text('Joueur')),
+                              DataColumn(label: Text('Temps de réaction (ms)')),
+                            ],
+                            rows: snapshot.data!,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  title: const Text('Visual Memory'),
+                  children: <Widget>[
+                    FutureBuilder<List<DataRow>>(
+                      future: _buildLeaderboardRowsVM(),
+                      builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Rang')),
+                              DataColumn(label: Text('Joueur')),
+                              DataColumn(label: Text('Level')),
+                            ],
+                            rows: snapshot.data!,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                ExpansionTile(
+                  title: const Text('Guess The Number'),
+                  children: <Widget>[
+                    FutureBuilder<List<DataRow>>(
+                      future: _buildLeaderboardRowsGTN(),
+                      builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return DataTable(
+                            columns: const [
+                              DataColumn(label: Text('Rang')),
+                              DataColumn(label: Text('Joueur')),
+                              DataColumn(label: Text('Level')),
+                            ],
+                            rows: snapshot.data!,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
